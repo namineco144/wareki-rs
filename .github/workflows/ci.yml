@@ -76,3 +76,47 @@ jobs:
           export LD_LIBRARY_PATH="${GITHUB_WORKSPACE}/target/release:$LD_LIBRARY_PATH"
           export CGO_LDFLAGS="-L${GITHUB_WORKSPACE}/target/release -lwareki_c"
           go test -v
+
+  build-wheels:
+    name: Build Python Wheels
+    needs: python-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --out dist
+          working-directory: bindings/python
+        env:
+          PYO3_USE_ABI3_FORWARD_COMPATIBILITY: "1"
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: bindings/python/dist
+
+  publish-testpypi:
+    name: Publish Python to TestPyPI
+    needs: build-wheels
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist/
