@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  core-tests:
+    name: Core Rust Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run Core Tests
+        run: cargo test -p wareki-core
+
+  python-tests:
+    name: Python Bindings Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install maturin pytest
+      - name: Run Python Tests
+        working-directory: ./bindings/python
+        run: |
+          maturin develop
+          pytest test_wareki.py
+
+  node-tests:
+    name: Node.js Bindings Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install and Build Node bindings
+        working-directory: ./bindings/node
+        run: |
+          npm install
+          npm run build
+      - name: Run Node Tests
+        working-directory: ./bindings/node
+        run: npm test
+
+  go-tests:
+    name: Go Bindings Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Build C static library
+        run: cargo build --release -p wareki-c
+      - name: Run Go Tests
+        working-directory: ./bindings/go
+        run: |
+          export LD_LIBRARY_PATH="${GITHUB_WORKSPACE}/target/release:$LD_LIBRARY_PATH"
+          export CGO_LDFLAGS="-L${GITHUB_WORKSPACE}/target/release -lwareki_c"
+          go test -v
