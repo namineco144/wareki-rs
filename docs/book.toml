@@ -1,7 +1,6 @@
 [book]
 authors = ["Antigravity"]
 language = "ja"
-multilingual = false
 src = "src"
 title = "wareki-rs Documentation"
 
