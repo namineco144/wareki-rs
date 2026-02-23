@@ -1,0 +1,10 @@
+[book]
+authors = ["Antigravity"]
+language = "ja"
+multilingual = false
+src = "src"
+title = "wareki-rs Documentation"
+
+[output.html]
+git-repository-url = "https://github.com/namineco144/maturin-build"
+edit-url-template = "https://github.com/namineco144/maturin-build/edit/main/docs/src/{path}"
