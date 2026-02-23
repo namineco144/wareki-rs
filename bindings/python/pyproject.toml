@@ -1,0 +1,13 @@
+[build-system]
+requires = ["maturin>=1.5"]
+build-backend = "maturin"
+
+[project]
+name = "wareki-python"
+version = "0.1.0"
+description = "Japanese era conversion library"
+authors = [{name = "Antigravity", email = "test@example.com"}]
+requires-python = ">=3.8"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]

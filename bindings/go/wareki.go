@@ -1,7 +1,7 @@
 package wareki
 
 /*
-#cgo LDFLAGS: -L${SRCDIR}/../c/target/release -lwareki_c
+#cgo LDFLAGS: -L${SRCDIR}/../../target/release -lwareki_c
 #include <stdlib.h>
 #include <stdbool.h>
 
