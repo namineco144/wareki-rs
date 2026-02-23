@@ -1,0 +1,28 @@
+{
+  "name": "Rust with Node, Python, and Go",
+  "image": "mcr.microsoft.com/devcontainers/rust:1",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.22"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "rust-analyzer.linkedProjects": ["Cargo.toml"]
+      },
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "ms-python.python",
+        "golang.go"
+      ]
+    }
+  },
+  "postCreateCommand": "rustup component add rustfmt clippy"
+}

@@ -1,0 +1,13 @@
+[package]
+name = "wareki-python"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "wareki"
+crate-type = ["cdylib"]
+
+[dependencies]
+chrono = "0.4"
+pyo3 = { version = "0.20", features = ["extension-module"] }
+wareki-core = { path = "../../core" }

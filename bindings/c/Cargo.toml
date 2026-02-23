@@ -1,0 +1,12 @@
+[package]
+name = "wareki-c"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "wareki_c"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+chrono = "0.4"
+wareki-core = { path = "../../core" }

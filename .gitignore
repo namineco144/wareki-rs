@@ -1,0 +1,11 @@
+/target
+/bindings/c/target
+/bindings/node/target
+/bindings/python/target
+*.a
+*.so
+*.dll
+*.dylib
+node_modules
+dist
+__pycache__
