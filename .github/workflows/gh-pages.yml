@@ -28,11 +28,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install mdBook
-        run: |
-          mkdir -p bin
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.12.0/mdbook-v0.12.0-x86_64-unknown-linux-gnu.tar.gz | tar -xz -C bin
-          echo "$(pwd)/bin" >> $GITHUB_PATH
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
 
       - name: Build Documentation
         working-directory: docs
